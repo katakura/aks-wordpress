@@ -1,0 +1,7 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: azure-mysql
+spec:
+  type: ExternalName
+  externalName: XXXXXXXX.mysql.database.azure.com

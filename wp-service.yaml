@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: wordpress
+        envFrom:
+        - configMapRef:
+            name: wp-configmap
+        - secretRef:
+            name: wp-secrets
+        # wp-secrets create command
+        #   kubectl create secret generic wp-secrets --from-literal=WORDPRESS_DB_PASSWORD=<PASSWORD>
+        ports:
+        - containerPort: 80
+          name: wordpress
+        volumeMounts:
+        - name: wp-azure-disk
+          mountPath: /var/www/html
+      volumes:
+        - name: wp-azure-disk
+          persistentVolumeClaim:
+            claimName: wp-azure-disk
